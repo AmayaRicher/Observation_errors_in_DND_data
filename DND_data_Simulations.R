@@ -5,6 +5,9 @@ rm(list = ls())	# Clean the workspace
 
 
 #installing packages
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
 library(igraph)
 library(R6)
 library(coda)
