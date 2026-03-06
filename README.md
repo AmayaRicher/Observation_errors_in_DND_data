@@ -10,7 +10,9 @@ Perret, J., Besnard, A., Charpentier, A., & Papuga, G. (2023). Plants stand stil
 
 # Running the code
 Download all files and folders in a new folder, then run the *DND_data_Analysis_and_Figures.qmd* script. This script will load the data from the *data* file, save formatted data in the *saved_tables* file, fit the models and print the main figures.
-Then, run the *DND_data_Simulation.R* script, which contains the code to simulate fine-scale DND data, run occupancy models and print main figures.
+
+Then, run the *DND_data_Simulation.R* script, which contains the code to simulate fine-scale DND data, run occupancy models and print main figures. Because running the code for simulations and model fitting takes a while, outputs of simulations are already saved and stored in simulation_outputs, if one does not desire to rerun simulation analysis.
+
 Supplementary material is in the *DND_data_SuppMat.qmd* script. Knit the script to a PDF format to visualise supplementary figures.
 
 # Contact
