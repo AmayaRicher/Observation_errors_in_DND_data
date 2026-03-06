@@ -8,6 +8,8 @@ rm(list = ls())	# Clean the workspace
 library(igraph)
 library(R6)
 library(coda)
+library(readxl)
+library(readr)
 library(numDeriv)
 library(pracma)
 library(posterior)
@@ -20,6 +22,8 @@ library(kableExtra)
 #remotes::install_github("nimble-dev/nimble", ref = "master", subdir = "packages/nimble")
 #library(nimble)
 
+
+#To upload and print figures without running the simulations, go to end of script and import pre-saved tables
 
 true_psi.list <- c(0.1, 0.3, 0.5)	# occupancy probability 
 true_p11.list <- c(0.7, 0.9) #c(0.5, 0.7, 0.9)	# detection probability
