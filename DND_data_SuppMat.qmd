@@ -1,5 +1,5 @@
 ---
-title: "Fine_scale DND data Supplementary Material"
+title: "Fine scale DND data Supplementary Material"
 author: |
  | Jan Perret ([orcid](https://orcid.org/0000-0002-1912-6995)), Aurélien Besnard ([orcid](https://orcid.org/0000-0002-2289-9761)), Anne Charpentier ([orcid](https://orcid.org/0000-0002-8588-6001)), 
  | Guillaume Papuga ([orcid](https://orcid.org/0000-0002-7803-2219))
