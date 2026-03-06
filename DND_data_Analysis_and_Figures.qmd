@@ -202,7 +202,7 @@ df_data_quadrat <- df_data_cells %>%
 Saving the *df_data_quadrat* table:
 
 ```{r}
-#write.table(df_data_quadrat, "saved_tables/df_data_quadrat.csv", row.names = F, sep = ";")
+write.table(df_data_quadrat, "saved_tables/df_data_quadrat.csv", row.names = F, sep = ";")
 ```
 
 ## 4. Adding neighbor cell data
@@ -316,8 +316,8 @@ df_data_empty_cells_model <- df_data_empty_cells_model %>%
 Saving tables used for models:
 
 ```{r}
-#write.table(df_data_occup_cells_model, "saved_tables/df_data_occup_cells_model.csv", row.names = F, sep = ";")
-#write.table(df_data_empty_cells_model, "saved_tables/df_data_empty_cells_model.csv", row.names = F, sep = ";")
+write.table(df_data_occup_cells_model, "saved_tables/df_data_occup_cells_model.csv", row.names = F, sep = ";")
+write.table(df_data_empty_cells_model, "saved_tables/df_data_empty_cells_model.csv", row.names = F, sep = ";")
 ```
 
 # 2. General linear mixed models
