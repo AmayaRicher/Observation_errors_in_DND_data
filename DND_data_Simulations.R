@@ -180,7 +180,7 @@ for (a in 1:length(true_psi.list)) {
               n_detect_p10 <- n_detect_p10 + (1-x$z[i,j])*x$y[i,j]
             }
           }
-          rel_p11 <- n_detect_p11/(sum(x$z)*x$k) #portion of detections amongst truly occupied cells (*k because 3 observations of each cell)
+          rel_p11 <- n_detect_p11/(sum(x$z)*x$k) #portion of detections among truly occupied cells (*k because 3 observations of each cell)
           rel_p10 <- n_detect_p10/((x$nquadrats*x$ncells - sum(x$z))*x$k)
           
           inits <- function()list(psi=runif(1,0,1), p11 = runif(1,0,1))

@@ -1,8 +1,8 @@
 ---
 title: "Fine scale DND data Supplementary Material"
 author: |
- | Jan Perret ([orcid](https://orcid.org/0000-0002-1912-6995)), Aurélien Besnard ([orcid](https://orcid.org/0000-0002-2289-9761)), Anne Charpentier ([orcid](https://orcid.org/0000-0002-8588-6001)), 
- | Guillaume Papuga ([orcid](https://orcid.org/0000-0002-7803-2219))
+ | Amaya Richer ([orcid](https://orcid.org/0009-0007-2073-5206)), Aurélien Besnard ([orcid](https://orcid.org/0000-0002-2289-9761)), Anne Charpentier ([orcid](https://orcid.org/0000-0002-8588-6001)), Guillaume Papuga ([orcid](https://orcid.org/0000-0002-7803-2219))
+ | Jan Perret ([orcid](https://orcid.org/0000-0002-1912-6995))
 date: "Created on the `r format(Sys.time(), '%Y-%m-%d')`"
 header-includes:
   - \usepackage{longtable}
@@ -237,7 +237,7 @@ df_data_quadrat %>%
   theme(panel.spacing=unit(1,"lines"), legend.position = "bottom")
 ```
 
-**Figure S1.5:** Proportion of occupied cells (left panel) and unoccupied cells (right panel) that were correctly observed as such by an observer across the 10 quadrats for each species (a species corresponds to a field session). Dots indicate the proportion of occupied or unoccupied cells of all 10 quadrats of a session for which the observer correclty observed the occurrence. The colors indicate the level of experience in botany of the observer (1=least experienced; 5=most experienced). Species are ordered by decreasing median values of the proportion of correctly observed occupied cells. The thick line in a box indicates the median value across all observers of a field session, the box goes from the first to the third quartile and the whiskers extend from the minimum to the maximum value within 1.5 times the interquartile range from the box. <br>
+**Figure S1.5:** Proportion of occupied cells (left panel) and unoccupied cells (right panel) that were correctly observed as such by an observer across the 10 quadrats for each species (a species corresponds to a field session). Dots indicate the proportion of occupied or unoccupied cells of all 10 quadrats of a session for which the observer correctly observed the occurrence. The colors indicate the level of experience in botany of the observer (1=least experienced; 5=most experienced). Species are ordered by decreasing median values of the proportion of correctly observed occupied cells. The thick line in a box indicates the median value across all observers of a field session, the box goes from the first to the third quartile and the whiskers extend from the minimum to the maximum value within 1.5 times the interquartile range from the box. <br>
 
 <br>
 
@@ -283,8 +283,8 @@ We assessed the goodness-of-fit of the models using the R package DHARMa.
 ## Model on the detection probability
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height = 7, fig.width = 13}
-simuloutput <- simulateResiduals(fit_occupied_cells)
-plot(simuloutput)
+simuloutput_occupied_cells <- simulateResiduals(fit_occupied_cells)
+plot(simuloutput_occupied_cells)
 ```
 
 **Figure S2.1:** Main residual diagnostic plots of the general linear mixed model on the detection probability: the quantile-quantile plot (left panel) and the residuals against predicted values plot (right panel) are shown. <br>
@@ -296,8 +296,8 @@ The model seems to fit the data very well for this model. Although the KS unifor
 ## Model on the false-positive error probability
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.height = 7, fig.width = 13}
-simuloutput <- simulateResiduals(fit_empty_cells)
-plot(simuloutput)
+simuloutput_empty_cells <- simulateResiduals(fit_empty_cells)
+plot(simuloutput_empty_cells)
 ```
 
 **Figure S2.2:** Main residual diagnostic plots of the general linear mixed model on the false-positive error probability: the quantile-quantile plot (left panel) and the residuals against predicted values plot (right panel) are shown. <br>
@@ -726,7 +726,7 @@ ggplot(aes(x=`Quadrat order`, y=`p1|1`, color = `Botany experience`)) +
   theme_bw(),
 ncol = 3, common.legend = FALSE, legend = 'bottom', align = "h"
 ) %>%
-  annotate_figure(top = text_grob("Best-case scenario for detection", 
+  annotate_figure(top = text_grob("Worst-case scenario for detection", 
                size = 14)),
 nrow = 2, common.legend = FALSE, legend = 'bottom', align = 'v'
 )

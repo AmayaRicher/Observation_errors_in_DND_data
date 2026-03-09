@@ -9,7 +9,7 @@ toc: true
 toc-location: left
 ---
 
-This file contains the code used to analyze of the observation errors in fine-scale DND data in plant population monitoring. The code contains two parts, one for data preparation and the second for statistical analysis and graphs. Only graphs that were published in the main text of the paper are printed in this file. The code used to simulate data, fit occupancy models and generate the graph and the table from the simulation analysis in the main text of the paper are in the DND_data_Simulations file. To view supplementary analysis and graphs, see DND_data_SuppMat file.
+This file contains the code used to analyze observation errors in fine-scale DND data in plant population monitoring. The code contains two parts, one for the data preparation and the second for the statistical analysis and the drawing of graphs. Only graphs that were published in the main text of the paper are printed in this file. The code used to simulate data, fit occupancy models and generate the graph and the table from the simulation analysis detailed in the main text of the paper are in the DND_data_Simulations.R file. To view supplementary analysis and graphs, see DND_data_SuppMat.qmd file.
 
 ```{r}
 rm(list = ls())	# Clean the workspace
@@ -41,7 +41,7 @@ df_data <- read_delim("data/df_data_cells.csv",
     delim = ";", escape_double = FALSE, trim_ws = TRUE) %>%
   filter(species !='EUPPEP1' & species != 'CALARV1' & species != 'PLACOR') #removing 3 sessions because of unclean data
 
-#Covariables
+#Covariates
   #date and species conspicuousness
 df_species <- read_delim("data/data_species_detectability.csv", 
     delim = ";", escape_double = FALSE, trim_ws = TRUE) %>%
@@ -81,9 +81,9 @@ df_data <- df_data %>%
   filter(!(species == 'ALLsp' & obs_id == 'obs_jaho') & !(species == 'ALLsp' & obs_id == 'obs_bqiy') & !(species == 'EUPHEL' & obs_id == 'obs_lbev'))
 ```
 
-# 1. Data preparation
+# 1. Prepare data
 
-## 1. Joining imported tables
+## 1. Join imported tables
 
 We join quadrat-scale information (date, time spent on a quadrat, habitat closure, quadrat order), observer information (observer experience in botany) and species information (conspicuousness).
 
@@ -112,7 +112,7 @@ remove(df_data,
        df_quadrat_time)
 ```
 
-## 2. Creating presence/absence and detection/non-detection variables
+## 2. Create presence/absence and detection/non-detection variables
 
 Presence/absence refers to the **true** occurrence of a species in a given cell, whereas detection/non-detection refers to the **observed** occurrence of a species in a cell.
 
@@ -154,7 +154,7 @@ df_data_cells <- df_data_cells %>%
   mutate(occurrence_detection = as.factor(occurrence_detection))
 ```
 
-## 3. Obtaining quadrat-scale data
+## 3. Aggregate data at quadrat-scale
 
 ```{r}
 df_data_quadrat <- df_data_cells %>%
@@ -171,7 +171,7 @@ df_data_quadrat <- df_data_cells %>%
             count_tot = sum(count),
             count_tot_TRUE = sum(count_TRUE)) %>%
   left_join(.,df_data_cells %>%
-  filter(!is.na(occurrence_detection)) %>% #we remove quadrats that were not done
+  filter(!is.na(occurrence_detection)) %>% #we remove quadrats that were not surveyed
   group_by(species, obs_id, quadrat,
            quadrat_order,
            counting_time_cells,
@@ -206,11 +206,13 @@ Saving the *df_data_quadrat* table:
 write.table(df_data_quadrat, "saved_tables/df_data_quadrat.csv", row.names = F, sep = ";")
 ```
 
-## 4. Adding neighbor cell data
+## 4. Add covariates describing neighbor cells
 
 The objective is to create a variable that gives the mean number of individuals across neighbor cells of each cell.
 
-To do this, we want to join to each row of the df_data_cells table (e.g. each cell) information on neighbor cells. For this we first create a ragged list of neighbor cells id for each of the 100 cells in a quadrat:
+To do this, we want to join to each row of the df_data_cells table (e.g. each cell) information on neighbor cells. For this we first create a ragged list of neighbor cells id for each of the 100 cells in a quadrat: 
+
+(The code chunks below are marked as comments because they require a lot of computing time. To save you time, we have provided the resulting table so you can import it directly.)
 
 ```{r}
 # r <- matrix(c(1:100), nrow=10, ncol=10) %>%
@@ -292,7 +294,7 @@ df_data_empty_cells_model <- df_data_cells %>%
                                occurrence_detection == 'FP' ~ 1))
 ```
 
-We create two variables, one for the average number of individuals in neighbor cells, and the other for the edge (1 if the cell is on the edge of the quadrat, 0 if not).
+We create two additional variables, one for the average number of individuals in neighbor cells, and the other for the location of the cell, which takes the value 1 if the cell is on the edge of the quadrat, and 0 if not.
 
 ```{r}
 df_data_occup_cells_model <- df_data_occup_cells_model %>%
@@ -314,16 +316,16 @@ df_data_empty_cells_model <- df_data_empty_cells_model %>%
   ungroup()
 ```
 
-Saving tables used for models:
+Saving tables used for model fitting:
 
 ```{r}
 write.table(df_data_occup_cells_model, "saved_tables/df_data_occup_cells_model.csv", row.names = F, sep = ";")
 write.table(df_data_empty_cells_model, "saved_tables/df_data_empty_cells_model.csv", row.names = F, sep = ";")
 ```
 
-# 2. General linear mixed models
+# 2. Fit the models
 
-We prepare a table explaining all variables used in the models:
+We prepare a table with a description of all variables we used in the models and our associated hypotheses:
 
 ```{r}
 variables_glm_table <- data.frame(Variable = c("Species conspicuousness", "Habitat closure", "Botany experience", "Quadrat order", "Time spent prospecting the quadrat", "Number of individuals in the quadrat", "Number of individuals in the cell", "Mean number of individuals in adjacent cells", "Quadrat edge", "Species conspicuousness x Habitat closure", "Species conspicuousness x Number of individuals in the cell", "Species conspicuousness x Mean number of individuals in adjacent cells", "Quadrat order x Botany experience", "Botany experience x Number of individuals in the cell", "Number of individuals in the cell x Mean number of individuals in adjacent cells", "Time spent prospecting the quadrat x Number of individuals in the quadrat"))
@@ -466,7 +468,7 @@ fit_occupied_cells <- glmmTMB::glmmTMB(p11 ~ (1|species) + (1|species:quadrat) +
 summary(fit_occupied_cells)
 ```
 
-Plotting the predictions:
+Plot the predictions:
 
 ```{r}
 prediction_occupied_cells_1 <- predict_response(fit_occupied_cells, terms = c('count_TRUE [1:10]', 'exp_bota', 'habitat_closure[-1.5, 0.5, 2.5]', 'species_conspicuousness[1,4]'), condition = c(quadrat_order = 5, mean_neighbor_count= 1, edge = 0, counting_time_cells = 380, count_tot_TRUE = 32), type = 'fixed')
@@ -561,7 +563,7 @@ fit_empty_cells <- glmmTMB::glmmTMB(p10 ~ (1|species) + (1|species:quadrat) + (1
 summary(fit_empty_cells)
 ```
 
-Plotting the predictions:
+Plot the predictions:
 
 ```{r}
 prediction_empty_cells_1 <- predict_response(fit_empty_cells, terms = c('mean_neighbor_count [all]'), condition = c(species_conspicuousness = 2, habitat_closure = 0.5, exp_bota = 2.5, quadrat_order = 5, edge = 0, counting_time_cells = 380, count_tot_TRUE = 32), type = 'fixed')
